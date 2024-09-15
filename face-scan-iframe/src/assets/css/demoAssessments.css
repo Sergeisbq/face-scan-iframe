@@ -1,0 +1,354 @@
+.back-arrow-wrapper {
+  background: white;
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  margin-right: 30px;
+  cursor: pointer;
+}
+
+.assessment-tabs-con {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.assessment-blue-color {
+  color: #629ff4;
+}
+
+.assessment-green-color {
+  color: #339A31;
+}
+
+.assessment-light-green-color {
+  color: #9FD39D;
+}
+
+.light-gray-color {
+  color: #777777;
+}
+
+.dark-gray-color {
+  color: #00000099;
+}
+
+.record-red-color {
+  color: #ff4e44;
+}
+
+.bg-darker-gray-color {
+  background: #e8e8e8;
+}
+
+.mobile-data-assessment-results-bottom-bar {
+  width: 100%;
+  height: 8px;
+  background: #e6d7f9;
+  border-radius: 33px;
+}
+
+.voice-data-assessment-results-bottom-bar-old {
+  width: 100%;
+  height: 8px;
+  background: #9FD39D;
+  border-radius: 33px;
+}
+
+.voice-data-assessment-results-top-bar-old {
+  height: 8px;
+  border-radius: 33px;
+  background: #339A31;
+}
+
+.voice-data-assessment-results-container {
+  position: relative;
+  width: 100%;
+  height: 12px;
+}
+
+.voice-data-assessment-results-top-bar {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 12px;
+  background: #339A31;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.voice-data-assessment-results-container {
+  position: relative;
+  top: 50%;
+  left: 0;
+  height: 4px;
+  background: #9FD39D;
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+
+.mobile-data-assessment-json-wrapper {
+  height: 368px;
+  background: white;
+  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.voice-data-assessment-upload-con {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 595px;
+  min-height: 200px;
+  border: 1px dashed lightgray;
+  margin: 18px auto;
+}
+
+
+.voice-data-assessment-record-con {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 95%;
+  min-height: 200px;
+  padding: 16px 0;
+  margin: 18px auto;
+}
+
+.assessment-box-shadow {
+  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.mobile-data-assessment-example-con {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: all 0.8s ease-in-out;
+}
+
+.rotated {
+  transform: rotateY(180deg);
+}
+
+.mobile-data-assessment-example-front {
+  margin-top: 30px;
+  padding: 30px 25px;
+  background: rgba(253, 252, 255, 0.8);
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 9px;
+  position: absolute;
+  backface-visibility: hidden;
+}
+
+.mobile-data-assessment-example-back {
+  margin-top: 30px;
+  padding: 30px 50px;
+  background: rgba(253, 252, 255, 0.8);
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 9px;
+  position: absolute;
+  width: 100%;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+}
+
+.assessment-textfield-con {
+  padding: 5px;
+  background: #ffffff;
+  border: 1px solid #339A31;
+  border-radius: 6px;
+}
+
+.app-info-con {
+  display: flex;
+  flex-direction: column;
+  min-height: 125px;
+  padding: 10px 20px;
+  background: #ffffff;
+  box-shadow: 0px 0px 2px #629ff4;
+  border-radius: 7px;
+}
+
+.voice-data-assessment-con {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.voice-data-examples-con {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 20px;
+  background: white;
+}
+
+.voice-recording-wrapper {
+  display: none;
+  background: white;
+  border-radius: 12px;
+  width: 70%;
+  padding: 5px;
+  margin-right: 20px;
+  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.voice-recording-wrapper-upload-file {
+  display: flex;
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  padding: 5px;
+  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.upload-voice-files-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  padding: 15px;
+  background: #f1f0f2;
+  cursor: pointer;
+}
+
+.loan-probability-donut-chart {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loan-probability-donut-chart-hole {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.voice-data-record-audio {
+  width: 80%;
+}
+
+.react-json-view {
+  min-width: 627px;
+}
+
+.rhap_container {
+  box-shadow: 0px 0px 0px 0px;
+}
+
+.rhap_additional-controls {
+  display: none;
+}
+
+.rhap_controls-section {
+  margin-right: 15px;
+}
+
+.email-info div {
+  display: flex;
+}
+
+.email-info div::before {
+  content: url("../svgs/done-arrow.svg");
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 16px;
+  height: 16px;
+  flex-wrap: wrap;
+  color: white;
+  border-radius: 9999px;
+  background-color: #C5E4C3;
+}
+
+.email-info div.checked::before {
+  content: url("../svgs/done-arrow.svg");
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 16px;
+  height: 16px;
+  flex-wrap: wrap;
+  color: white;
+  border-radius: 9999px;
+  background-color: #339A31;
+}
+
+.voice-chart-results {
+  width: 400px !important;
+  margin-top: 32px;
+}
+
+@media (max-width: 525px) {
+  .email-info div {
+    width:100%;
+  }
+
+  .voice-chart-results {
+    width: 95% !important;
+    margin-top: 0;
+  }
+
+  .voice-chart-results > svg {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .voice-data-assessment-upload-con {
+    width:100%;
+  }
+  .voice-data-assessment-record-con {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 1100px) {
+  .mobile-data-assessment-example-back {
+    padding: 10px;
+    width: 90%;
+    margin-bottom: 20px;
+  }
+
+  .back-arrow-wrapper {
+    position: absolute;
+    background: transparent;
+    top: 79px;
+    left: 10px;
+  }
+
+  .react-json-view {
+    min-width: 50%;
+  }
+
+  .voice-data-assessment-con {
+    min-width: 360px;
+  }
+
+  .voice-recording-wrapper {
+    width: 95%;
+    margin-right: 0px;
+  }
+}
+
+@media only screen and (max-width: 450px) {
+  .back-arrow-wrapper {
+    position: absolute;
+    background: transparent;
+    top: 135px;
+    left: 10px;
+  }
+}
