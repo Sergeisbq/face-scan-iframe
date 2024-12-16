@@ -556,6 +556,7 @@ const FaceScan = ({ iframeConfig, onIFrameFinish, isVoiceScanAdded, setIsVoiceSc
                 tryAgain={tryAgain}
                 iframeConfig={iframeConfig}
                 isMobile={isMobile}
+                scoreId={scanScoreId.current}
               />
             </div>
           )}
@@ -565,6 +566,16 @@ const FaceScan = ({ iframeConfig, onIFrameFinish, isVoiceScanAdded, setIsVoiceSc
         </div>
       ) : (
         <div className="max-w-[910px] px-0">
+          <div>
+            <div className="mt-5 text-2xl text-center font-grotesk">
+              <b>Face Scan</b>
+            </div>
+            <div className="mt-5 text-center text-md font-grotesk">Try our pre-built behavior modules for yourself</div>
+            <div className="mt-2 mb-5 text-center text-md font-grotesk text-[#777777]">
+              A 30-second video clip from a webcam or phone provides enough information for our video module to enhance your understanding
+              of a person's physiological health and wellbeing.
+            </div>
+          </div>
           <div className={scanResults && isTimerFinished ? "hidden" : `flex justify-between h-full landing-page-con pt-5 pb-10 px-5`}>
             <div className="flex flex-col w-full" ref={screen}>
               <div className="flex flex-col items-center justify-around h-full border rounded-md border-lightGrey">
@@ -749,6 +760,7 @@ const FaceScan = ({ iframeConfig, onIFrameFinish, isVoiceScanAdded, setIsVoiceSc
               tryAgain={tryAgain}
               iframeConfig={iframeConfig}
               isMobile={isMobile}
+              scoreId={scanScoreId.current}
             />
           )}
           {(!iframeConfig?.age || !iframeConfig?.gender) && (

@@ -10,6 +10,7 @@ export const endpoints = {
   faceScanUploadAudioIframeEndpoint: apiUrlEndpoint + "face-scan/face-scan-upload-audio-iframe",
   getVideoAnalysisEndpoint: apiUrlEndpoint + "face-scan/video-iframe-analysis",
   getIframeVoiceResultsEndpoint: apiUrlEndpoint + "face-scan/iframe-voice-results",
+  sendScreenShotReportOnEmail: apiUrlEndpoint + "unprotected-file-upload/health-report-screenshot",
 
   isDebuggingFaceScan: false
 };

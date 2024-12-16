@@ -47,7 +47,7 @@ const FaceScanMainContainer = ({ isMobile }) => {
 
   return (
     <>
-      {isFaceApiModelsLoaded && pathName === "/" && (
+      {isFaceApiModelsLoaded && pathName === "/face-scan-iframe" && (
         <FaceScanIFrameAdapter
           isMobile={isMobile}
           videoToken={videoToken}

@@ -1,10 +1,14 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import HealthResult from "./HealthResult";
 import HealthResultItemBlock from "./HealthResultItemBlock";
 import { useNavigate } from "react-router-dom";
 import AssessmentResultsContainer from "./AssessmentResultsContainer";
 import CustomButton from "./CustomButton";
 import ProgressRing from "./ProgressRing";
+import { FormHelperText, TextField } from "@mui/material";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { endpoints } from "../../../config";
 
 const checkVitalSignValues = (value) => {
   if (value === "Error" || !value) {
@@ -34,9 +38,14 @@ const HealthResultCon = ({
   voiceDataErrorMessage,
   tryAgain,
   iframeConfig,
-  isMobile
+  isMobile,
+  scoreId
 }) => {
   const [risks, setRisks] = useState({ cardiovascularRisk: 0 });
+  const [userEmail, setUserEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+
+  const captureRef = useRef(null);
 
   const memoizedAssessedVoiceData = useMemo(() => assessedVoiceData, [assessedVoiceData]);
 
@@ -65,9 +74,63 @@ const HealthResultCon = ({
     }
   };
 
+  const handleValidation = () => {
+    if (!userEmail) {
+      setEmailError("Email is required");
+      return true;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userEmail)) {
+      setEmailError("Invalid email format");
+      return true;
+    } else {
+      setEmailError("");
+      return false;
+    }
+  };
+
+  const sendScreenshotOnEmail = async () => {
+    if (handleValidation()) return;
+
+    try {
+      const { default: html2canvas } = await import("html2canvas");
+
+      const element = captureRef.current;
+      if (!element) return;
+
+      const canvas = await html2canvas(element, {
+        useCORS: true,
+        logging: false
+      });
+
+      canvas.toBlob(async (blob) => {
+        if (blob) {
+          const formData = new FormData();
+          formData.append("healthReport", blob, "healthReport.png");
+          formData.append("receiversEmail", userEmail);
+          formData.append("scoreId", scoreId);
+
+          try {
+            const res = await axios.post(endpoints.sendScreenShotReportOnEmail, formData, {
+              headers: { "Content-Type": "multipart/form-data" }
+            });
+
+            if (res.status === 200) {
+              Swal.fire("Health Report was sent successfully", "", "success");
+            } else {
+              Swal.fire("Oops", "There is a problem with sending the Health Report, please try again later", "warning");
+            }
+          } catch (error) {
+            Swal.fire("Oops", "An error occurred while sending the Health Report. Please try again later.", "error");
+          }
+        }
+      }, "image/png");
+    } catch (error) {
+      console.error("Error taking screenshot:", error);
+    }
+  };
+
   return (
     <>
-      <div className="bg-[#FAFAFA] shadow-xl mt-10">
+      <div className="bg-[#FAFAFA] shadow-xl mt-10" ref={captureRef}>
         <div className="relative top-0 left-0 w-4 h-4 bg-[#339A31]"></div>
 
         <div className="w-full px-[8%] py-[4%]">
@@ -192,6 +255,9 @@ const HealthResultCon = ({
             </div>
             <div className="flex flex-row gap-5 items-center tablet:justify-between w-full min-w-[250px] inBetweenN:min-w-[300px]">
               <div className="w-full">
+                <div className="flex flex-row items-center justify-start px-8 font-grotesk text-[16px] h-[50px] bg-[#9FD39D] w-full">
+                  Other
+                </div>
                 <div className="flex flex-col flex-wrap items-center justify-between w-full gap-2 mt-3 mb-3 tablet:flex-row tablet:gap-6">
                   <div className="flex flex-row justify-center w-full tablet:w-[47%]">
                     <HealthResultItemBlock
@@ -236,8 +302,42 @@ const HealthResultCon = ({
           </>
         </div>
       </div>
+      <div className="flex flex-col flex-wrap items-start justify-center w-full gap-5 mt-16 tablet:flex-row">
+        <div className="flex items-start w-full pl-2 text-sm font-grotesk">
+          To receive a copy of the report, please enter your email address and click 'Send'.
+        </div>
+        <div className="w-full tablet:w-[48%]">
+          <>
+            <TextField
+              placeholder="Type your email"
+              type="email"
+              fullWidth
+              className="w-full"
+              error={Boolean(emailError)}
+              // inputProps={{ minLength: 6 }}
+              value={userEmail || ""}
+              onChange={(e) => setUserEmail(e.target.value)}
+              sx={{
+                ".MuiOutlinedInput-root": {
+                  height: "50px",
+                  fontSize: "12px",
+                  fontFamily: "Space Grotesk",
+                  borderRadius: "5px"
+                },
+                "& .MuiFormLabel-root": {
+                  color: "#9FD39D"
+                }
+              }}
+            />
+            <FormHelperText className="w-full pl-3 error-color">{emailError}</FormHelperText>
+          </>
+        </div>
+        <div className="w-full tablet:w-[48%]">
+          <CustomButton text="Send" fullWidth onClick={sendScreenshotOnEmail} />
+        </div>
+      </div>
       <div
-        className={`${iframeConfig ? "hidden" : "flex"} flex-col flex-wrap items-center w-full justify-center gap-5 mt-20 tablet:flex-row`}
+        className={`${iframeConfig ? "hidden" : "flex"} flex-col flex-wrap items-center justify-center w-full gap-5 mt-20 tablet:flex-row`}
       >
         <div className="w-full inBetween:w-1/2 inBetweenN:w-2/3">
           <CustomButton text="Register and Start for Free" fullWidth onClick={handleButtonClick} />
@@ -246,7 +346,7 @@ const HealthResultCon = ({
           <CustomButton text="Try again" fullWidth onClick={tryAgain} />
         </div>
       </div>
-      <div className={`${iframeConfig ? "hidden" : "flex"} items-center w-full justify-center mt-20 flex-row`}>
+      <div className="flex flex-row items-center justify-center w-full mt-20">
         <div className="flex flex-col font-grotesk justify-center overflow-hidden overflow-y-auto text-sm text-start max-h-80 text-[#938F8F]">
           *General well-being encompasses an individual's overall state of health, considering various aspects of physical, mental, and
           emotional well-being. The scoring ranges used are as follows: Less than 40: Poor. Between 40 and 79: Good. Between 80 and 100:
