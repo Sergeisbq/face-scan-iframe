@@ -57,11 +57,11 @@ const VideoTimeAndStatus = ({ onTimerFinished, analysisStatus, isVoiceScanAdded,
       {noDesign ? (
         <></>
       ) : (
-        <div className="items-center gap-3 tablet:gap-0 justify-center rounded-[100px] tablet:ml-3 laptop:mt-0 flex tablet:flex-col flex-row tablet:w-[50px]">
+        <div className="items-center gap-3 justify-center rounded-lg flex flex-row bg-[#F0F0F0] p-2 border-[#F0F0F0] border-[1px]">
           {analysisStatus !== GetHealthStage.WaitingData && (
-            <div className="text-4xl font-bold text-center font-grotesk text-darkGreen">{scanTimeRemaining || ""}</div>
+            <div className="text-4xl font-bold text-center font-sourceSans text-darkGreen">{scanTimeRemaining || ""}</div>
           )}
-          <div className="text-md font-medium leading-4 text-center font-grotesk text-[#2D2D2D]">{text}</div>
+          <div className="text-md font-medium leading-4 text-center font-sourceSans text-[#2D2D2D]">{text}</div>
         </div>
       )}
     </>

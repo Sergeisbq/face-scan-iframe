@@ -115,11 +115,11 @@ const FaceScan = ({ iframeConfig, onIFrameFinish, isVoiceScanAdded, setIsVoiceSc
     setCameraDevices(deviceList);
   };
 
-  const handleVoiceScanChange = (e) => {
-    const isVoiceAnalysisOn = e.target.value === "Video + Audio";
-    setIsVoiceScanAdded(isVoiceAnalysisOn);
-    getCameraPermission(isVoiceAnalysisOn);
-  };
+  // const handleVoiceScanChange = (e) => {
+  //   const isVoiceAnalysisOn = e.target.value === "Video + Audio";
+  //   setIsVoiceScanAdded(isVoiceAnalysisOn);
+  //   getCameraPermission(isVoiceAnalysisOn);
+  // };
 
   const tryAgain = () => {
     setTimeout(() => {
@@ -131,7 +131,7 @@ const FaceScan = ({ iframeConfig, onIFrameFinish, isVoiceScanAdded, setIsVoiceSc
     setAnalysisStatus(GetHealthStage.Idle);
     setScanResults();
     setIsTimerFinished(false);
-    setIsVoiceScanAdded(false);
+    // setIsVoiceScanAdded(false);
   };
 
   const handleGettingVoiceDataWithinIframeUI = async () => {
@@ -301,7 +301,7 @@ const FaceScan = ({ iframeConfig, onIFrameFinish, isVoiceScanAdded, setIsVoiceSc
           args[1].body = JSON.stringify(dataToSend);
         }
 
-        if (iframeConfig) faceScanEndpoint = endpoints.getVideoAnalysisEndpoint;
+        // if (iframeConfig) faceScanEndpoint = endpoints.getVideoAnalysisEndpoint;
       }
 
       const res = await fetch(faceScanEndpoint, {
@@ -394,7 +394,7 @@ const FaceScan = ({ iframeConfig, onIFrameFinish, isVoiceScanAdded, setIsVoiceSc
     const current = camera.getVideo();
     cameraRef.current = current;
     current.addEventListener("loadedmetadata", setNewVideoDim);
-    current.style.borderRadius = "4px 4px 0px 0px";
+    current.style.borderRadius = "16px 16px 16px 16px";
     setCamera(camera);
     setVideo(current);
     setIsScanningReadyToStart(true);
@@ -545,7 +545,7 @@ const FaceScan = ({ iframeConfig, onIFrameFinish, isVoiceScanAdded, setIsVoiceSc
               />
             )}
           </div>
-          {scanResults && isTimerFinished && iframeConfig.showResults === "display" && (
+          {scanResults && isTimerFinished && iframeConfig?.showResults === "display" && (
             <div className="max-w-[910px] p-0">
               <HealthResultCon
                 result={scanResults}
@@ -565,20 +565,22 @@ const FaceScan = ({ iframeConfig, onIFrameFinish, isVoiceScanAdded, setIsVoiceSc
           )}
         </div>
       ) : (
-        <div className="max-w-[910px] px-0">
-          <div>
-            <div className="mt-5 text-2xl text-center font-grotesk">
-              <b>Face Scan</b>
+        <div className="max-w-[750px]">
+          {!scanResults && !isTimerFinished && (
+            <div className="px-4">
+              <div className="mt-5 text-4xl text-center font-sourceSans font-700">
+                <b>Face Scan</b>
+              </div>
+              <div className="mt-5 text-center text-md font-sourceSans">Try our pre-built behavior modules for yourself</div>
+              <div className="mt-2 mb-5 text-center text-md font-sourceSans text-[#777777]">
+                A 30-second video clip from a webcam or phone provides enough information for our video module to enhance your understanding
+                of a person's physiological health and wellbeing.
+              </div>
             </div>
-            <div className="mt-5 text-center text-md font-grotesk">Try our pre-built behavior modules for yourself</div>
-            <div className="mt-2 mb-5 text-center text-md font-grotesk text-[#777777]">
-              A 30-second video clip from a webcam or phone provides enough information for our video module to enhance your understanding
-              of a person's physiological health and wellbeing.
-            </div>
-          </div>
-          <div className={scanResults && isTimerFinished ? "hidden" : `flex justify-between h-full landing-page-con pt-5 pb-10 px-5`}>
+          )}
+          <div className={scanResults && isTimerFinished ? "hidden" : `flex justify-between h-full pb-10 px-5`}>
             <div className="flex flex-col w-full" ref={screen}>
-              <div className="flex flex-col items-center justify-around h-full border rounded-md border-lightGrey">
+              <div className="flex flex-col items-center justify-around h-full">
                 <div className={`${analysisStatus === GetHealthStage.Idle ? "p-0 " : "tablet:pt-2 tablet:px-4 rounded-md "}`}>
                   {isCamPermissionAllowed ? (
                     <>
@@ -591,17 +593,17 @@ const FaceScan = ({ iframeConfig, onIFrameFinish, isVoiceScanAdded, setIsVoiceSc
                           <div className="flex flex-row justify-between w-full gap-4">
                             <div className="z-20 flex justify-center w-full bg-white rounded-md">
                               <Select
-                                className="w-full p-2 border border-[#9FD39D] h-[50px] !font-grotesk"
+                                className="w-full p-2 border border-[#9FD39D] h-[50px] !font-sourceSans"
                                 variant="standard"
                                 value={isVoiceScanAdded ? "Video + Audio" : "Video only"}
                                 MenuProps={{ disableScrollLock: true }}
                                 style={{ fontSize: isMobile ? "14px" : "16px" }}
-                                onChange={handleVoiceScanChange}
+                                // onChange={handleVoiceScanChange}
                               >
-                                <MenuItem className="!font-grotesk" value="Video only">
+                                <MenuItem className="!font-sourceSans" value="Video only">
                                   Video only
                                 </MenuItem>
-                                <MenuItem className="!font-grotesk" value="Video + Audio">
+                                <MenuItem className="!font-sourceSans" value="Video + Audio">
                                   Video + Audio
                                 </MenuItem>
                               </Select>
@@ -609,8 +611,8 @@ const FaceScan = ({ iframeConfig, onIFrameFinish, isVoiceScanAdded, setIsVoiceSc
                           </div>
                         </div>
                       ) : (
-                        <div className="flex flex-col items-center w-full mt-2 bg-white rounded-t-md tablet:flex-row tablet:items-start">
-                          <div className="w-[80px] items-center justify-center h-full tablet:mt-4 tablet:mb-4 tablet:ml-6 inBetween:mt-2">
+                        <div className="flex flex-col items-center w-full bg-white rounded-t-md tablet:flex-row tablet:items-start">
+                          <div className="items-center justify-center w-[65%] h-full p-4">
                             <VideoTimeAndStatus
                               analysisStatus={analysisStatus}
                               isVoiceScanAdded={isVoiceScanAdded}
@@ -618,16 +620,16 @@ const FaceScan = ({ iframeConfig, onIFrameFinish, isVoiceScanAdded, setIsVoiceSc
                             />
                           </div>
                           <div className="border-b-2 w-[70px] mt-[45px] tablet:mt-[50px] inBetween:mt-[45px] ml-1 rotate-90 text-lightGrey mobile:hidden tablet:block " />
-                          <div className="flex items-center justify-start w-full h-full tablet:mt-2">
+                          <div className="flex items-center justify-center w-full h-full tablet:mt-2">
                             {isVoiceScanAdded ? (
                               <div className="flex flex-col items-start">
-                                <div className="pl-2 mt-2 text-md font-grotesk">Answer this Question</div>
-                                <div className="p-2 text-lg tablet:pt-0 inBetween:pt-2 tablet:mr-5 inBetween:mr-0 font-grotesk">
+                                <div className="pl-2 mt-2 text-md font-sourceSans">Answer this Question</div>
+                                <div className="p-2 text-lg tablet:pt-0 inBetween:pt-2 tablet:mr-5 inBetween:mr-0 font-sourceSans">
                                   What advice would you give to someone who is just starting out in their career?
                                 </div>
                               </div>
                             ) : (
-                              <div className="p-2 text-lg font-grotesk">
+                              <div className="p-2 text-md font-sourceSans text-[#777777] text-center">
                                 Stay in the center of the video and try not to move while we analyze it
                               </div>
                             )}
@@ -658,16 +660,16 @@ const FaceScan = ({ iframeConfig, onIFrameFinish, isVoiceScanAdded, setIsVoiceSc
                                 <div className="flex flex-row justify-between w-1/2 gap-4">
                                   <div className="z-20 hidden w-full bg-white rounded-md tablet:block">
                                     <Select
-                                      className="w-full p-2 border border-[#9FD39D] h-[50px] !font-grotesk"
+                                      className="w-full p-2 border border-[#9FD39D] h-[50px] !font-sourceSans"
                                       variant="standard"
                                       value={isVoiceScanAdded ? "Video + Audio" : "Video only"}
-                                      onChange={handleVoiceScanChange}
+                                      // onChange={handleVoiceScanChange}
                                       MenuProps={{ disableScrollLock: true }}
                                     >
-                                      <MenuItem className="!font-grotesk" value="Video only">
+                                      <MenuItem className="!font-sourceSans" value="Video only">
                                         Video only
                                       </MenuItem>
-                                      <MenuItem className="!font-grotesk" value="Video + Audio">
+                                      <MenuItem className="!font-sourceSans" value="Video + Audio">
                                         Video + Audio
                                       </MenuItem>
                                     </Select>
@@ -684,7 +686,7 @@ const FaceScan = ({ iframeConfig, onIFrameFinish, isVoiceScanAdded, setIsVoiceSc
                                 </div>
                               </div>
                             ) : (
-                              <div className="flex items-center justify-around h-full mt-4 mb-2 text-xl font-medium font-grotesk text-darkGreen">
+                              <div className="flex items-center justify-around h-full mt-4 mb-2 text-xl font-medium font-sourceSans text-darkGreen">
                                 Analyzing ...
                               </div>
                             )}
@@ -715,7 +717,7 @@ const FaceScan = ({ iframeConfig, onIFrameFinish, isVoiceScanAdded, setIsVoiceSc
                     </>
                   ) : (
                     <div className="flex items-center justify-center relative h-[550px] w-full bg-black">
-                      <div className="text-white w-[220px] text-center font-grotesk">
+                      <div className="text-white w-[220px] text-center font-sourceSans">
                         It is necessary to allow us to use the camera to start the test.
                       </div>
                       <img src={facePlacementImgScaled} alt="face placement" className="absolute w-2/3 h-[100%] overflow-hidden top-2" />
@@ -723,7 +725,7 @@ const FaceScan = ({ iframeConfig, onIFrameFinish, isVoiceScanAdded, setIsVoiceSc
                   )}
                   <div>
                     {analysisStatus === GetHealthStage.Idle ? (
-                      <div className={`z-20 flex w-full h-full p-3 ${iframeConfig ? "" : "tablet:hidden"}`}>
+                      <div className={`z-20 flex w-full h-full pt-5 ${iframeConfig ? "" : "tablet:hidden"}`}>
                         <VideoDemoEvaluateButton startScanning={startScanning} />
                       </div>
                     ) : (
@@ -734,11 +736,11 @@ const FaceScan = ({ iframeConfig, onIFrameFinish, isVoiceScanAdded, setIsVoiceSc
                 </div>
               </div>
 
-              <div className={`flex items-center justify-center`}>
+              <div className="flex items-center justify-center">
                 {analysisStatus === GetHealthStage.Idle ? (
                   <div className={`flex ${isVoiceScanAdded ? "flex-col items-center" : ""} justify-center mt-8 ml-3`}>
                     {isVoiceScanAdded && (
-                      <div className="mb-10 text-lg text-center font-grotesk">
+                      <div className="mb-10 text-lg text-center font-sourceSans">
                         You will need to answer a question and you answer has to be at least 30 seconds long. You will be prompted to answer
                         this question after you click Start Evaluation
                       </div>

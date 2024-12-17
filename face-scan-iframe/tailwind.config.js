@@ -14,10 +14,8 @@ module.exports = {
       bizbaz: "#339A31"
     },
     fontFamily: {
-      roboto: ["Roboto Condensed"],
-      montserrat: ["Montserrat"],
-      public: ["Public Sans"],
-      grotesk: ["Space Grotesk"]
+      grotesk: ["Space Grotesk"],
+      sourceSans: ["Source Sans"]
     },
     extend: {
       minWidth: {

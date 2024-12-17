@@ -1,27 +1,27 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+// import { useLocation } from "react-router-dom";
 import * as faceapi from "face-api.js";
 import FaceScanIFrameAdapter from "./FaceScanIFrameAdapter";
 
 const pathName = window.location.pathname;
 
-const useQuery = () => {
-  return new URLSearchParams(useLocation().search);
-};
+// const useQuery = () => {
+//   return new URLSearchParams(useLocation().search);
+// };
 
 const FaceScanMainContainer = ({ isMobile }) => {
   const [isFaceApiModelsLoaded, setIsFaceApiModelsLoaded] = useState(false);
 
-  const query = useQuery();
-  const videoToken = query.get("videoToken");
-  const noDesign = query.get("noDesign")?.toLowerCase() === "true";
-  const buttonBgColor = query.get("buttonBgColor");
-  const buttonTextColor = query.get("buttonTextColor");
-  const showResults = query.get("showResults");
-  const ageString = query.get("age");
-  const age = ageString ? parseInt(query.get("age"), 10) : null;
-  const gender = query.get("gender");
-  const isVoiceAnalysisOn = query.get("isVoiceAnalysisOn")?.toLowerCase() === "true";
+  // const query = useQuery();
+  // const videoToken = query.get("videoToken");
+  // const noDesign = query.get("noDesign")?.toLowerCase() === "true";
+  // const buttonBgColor = query.get("buttonBgColor");
+  // const buttonTextColor = query.get("buttonTextColor");
+  // const showResults = query.get("showResults");
+  // const ageString = query.get("age");
+  // const age = ageString ? parseInt(query.get("age"), 10) : null;
+  // const gender = query.get("gender");
+  // const isVoiceAnalysisOn = query.get("isVoiceAnalysisOn")?.toLowerCase() === "true";
 
   const faceApiModels = () => [
     faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
@@ -36,28 +36,28 @@ const FaceScanMainContainer = ({ isMobile }) => {
       await Promise.all(faceApiModels());
       setIsFaceApiModelsLoaded(true);
     };
-
-    if (!age || !gender) {
-      loadFaceApiModels();
-    } else {
-      setIsFaceApiModelsLoaded(true);
-    }
+    loadFaceApiModels();
+    // if (!age || !gender) {
+    //   loadFaceApiModels();
+    // } else {
+    //   setIsFaceApiModelsLoaded(true);
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
-      {isFaceApiModelsLoaded && pathName === "/face-scan-iframe" && (
+      {isFaceApiModelsLoaded && pathName === "/" && (
         <FaceScanIFrameAdapter
           isMobile={isMobile}
-          videoToken={videoToken}
-          noDesign={noDesign}
-          buttonBgColor={buttonBgColor}
-          buttonTextColor={buttonTextColor}
-          showResults={showResults}
-          age={age}
-          gender={gender}
-          isVoiceAnalysisOn={isVoiceAnalysisOn}
+          videoToken="testVideoToken"
+          // noDesign={noDesign}
+          // buttonBgColor={buttonBgColor}
+          // buttonTextColor={buttonTextColor}
+          showResults="display"
+          // age={age}
+          // gender={gender}
+          isVoiceAnalysisOn={false}
         />
       )}
     </>

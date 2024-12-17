@@ -5,10 +5,8 @@ const ConditionsChecklist = ({ isVoiceScanAdded, isMicPermissionAllowed }) => {
   const demoVideoConditions = useSelector((state) => state.appSettings.demoVideoConditions);
 
   return (
-    <div className="flex flex-col items-center w-full mb-5">
-      <div
-        className={`flex overflow-hidden flex-row flex-wrap justify-center inBetween:justify-between tablet:gap-2 gap-5 bg-white p-5 w-full rounded-b-md`}
-      >
+    <div className="flex flex-col items-start justify-start w-full mb-5">
+      <div className="flex flex-col items-start justify-start w-full gap-5 py-5 overflow-hidden bg-white rounded-b-md">
         <Condition
           status={demoVideoConditions.lighting}
           condition="Lighting"

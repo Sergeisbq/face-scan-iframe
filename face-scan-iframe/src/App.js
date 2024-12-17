@@ -18,7 +18,7 @@ function App() {
         <SnackbarProvider />
         <BrowserRouter>
           <Routes>
-            <Route path="/face-scan-iframe" element={<FaceScanMainContainer />} />
+            <Route path="/" element={<FaceScanMainContainer />} />
           </Routes>
         </BrowserRouter>
       </Provider>

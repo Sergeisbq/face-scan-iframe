@@ -19,7 +19,7 @@ const AssessmentResultsContainer = ({ assessedData, assessmentType, padding, min
 
   return (
     <div
-      className={`flex justify-center font-grotesk ${
+      className={`flex justify-center font-sourceSans ${
         wrap ? "flex-wrap" : "flex-wrap mobile:justify-center tablet:gap-10 mt-0"
       } mobile:gap-6 text-[16px] font-400 text-[black]`}
     >
@@ -38,13 +38,13 @@ const AssessmentResultsContainer = ({ assessedData, assessmentType, padding, min
               >
                 <div className="flex flex-col mt-0">
                   <div className={`flex justify-between ${wrap ? "" : "border-b border-[#339A31] p-2"}`}>
-                    <div className="inline-block truncate font-grotesk" style={{ maxWidth: minWidth ? minWidth - 40.8 : 210 }}>
+                    <div className="inline-block truncate font-sourceSans" style={{ maxWidth: minWidth ? minWidth - 40.8 : 210 }}>
                       {labeledData.title}
                     </div>
                     {labeledData.valueCount ? (
-                      <div className="font-grotesk">{`${labeledData.labelValue}/${labeledData.valueCount}`}</div>
+                      <div className="font-sourceSans">{`${labeledData.labelValue}/${labeledData.valueCount}`}</div>
                     ) : (
-                      <div className="font-grotesk">{` ${properDisplayStringValue}`}</div>
+                      <div className="font-sourceSans">{` ${properDisplayStringValue}`}</div>
                     )}
                   </div>
                   {labeledData.valueCount && (
@@ -79,7 +79,7 @@ const AssessmentResultsContainer = ({ assessedData, assessmentType, padding, min
                 disableRestoreFocus
               >
                 <Typography
-                  sx={{ p: 2, fontFamily: "Space Grotesk", fontSize: "12px", fontWeight: 300, color: "#5c596b", maxWidth: "400px" }}
+                  sx={{ p: 2, fontFamily: "Space sourceSans", fontSize: "12px", fontWeight: 300, color: "#5c596b", maxWidth: "400px" }}
                 >
                   {labeledData?.description}
                 </Typography>

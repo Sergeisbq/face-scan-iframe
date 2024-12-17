@@ -1,14 +1,15 @@
 import { useMemo, useRef, useState } from "react";
 import HealthResult from "./HealthResult";
 import HealthResultItemBlock from "./HealthResultItemBlock";
-import { useNavigate } from "react-router-dom";
 import AssessmentResultsContainer from "./AssessmentResultsContainer";
 import CustomButton from "./CustomButton";
 import ProgressRing from "./ProgressRing";
-import { FormHelperText, TextField } from "@mui/material";
+import { FormHelperText, InputAdornment, TextField } from "@mui/material";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { endpoints } from "../../../config";
+import emailIcon from "../../../assets/images/email-icon.png";
+import arrowDownIcon from "../../../assets/svgs/arrow-down-icon.svg";
 
 const checkVitalSignValues = (value) => {
   if (value === "Error" || !value) {
@@ -44,6 +45,9 @@ const HealthResultCon = ({
   const [risks, setRisks] = useState({ cardiovascularRisk: 0 });
   const [userEmail, setUserEmail] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [isHeartVisible, setIsHeartVisible] = useState(true);
+  const [isBloodVisible, setIsBloodVisible] = useState(true);
+  const [isOtherVisible, setIsOtherVisible] = useState(true);
 
   const captureRef = useRef(null);
 
@@ -54,12 +58,14 @@ const HealthResultCon = ({
   let health = result;
   let holistic = health.holisticHealth;
   let vs = health.vitalSigns;
-  let cardio = health.risks?.cardiovascularRisks;
+  // let cardio = health.risks?.cardiovascularRisks;
 
   const currentDate = new Date();
-  const navigate = useNavigate();
-  const handleButtonClick = () => {
-    navigate("/register");
+
+  const toggleVisibility = (section) => {
+    if (section === "heart") setIsHeartVisible(!isHeartVisible);
+    else if (section === "blood") setIsBloodVisible(!isBloodVisible);
+    else if (section === "other") setIsOtherVisible(!isOtherVisible);
   };
 
   const determineHealthLabel = (value) => {
@@ -128,43 +134,44 @@ const HealthResultCon = ({
     }
   };
 
+  const refreshPage = () => {
+    window.location.reload();
+  };
+
   return (
     <>
-      <div className="bg-[#FAFAFA] shadow-xl mt-10" ref={captureRef}>
-        <div className="relative top-0 left-0 w-4 h-4 bg-[#339A31]"></div>
-
-        <div className="w-full px-[8%] py-[4%]">
+      <div ref={captureRef} className="flex items-center justify-center w-full">
+        <div className="w-full px-[8%] py-[4%] max-w-[750px]">
           <>
-            <div className="flex tablet:flex-row flex-col items-center tablet:justify-between w-full min-w-[250px] inBetweenN:min-w-[300px]">
-              <div className="flex flex-col justify-start w-full tablet:w-1/2">
-                <div className="text-start font-grotesk">HEALTH REPORT</div>
-                <div className="mt-10 text-3xl text-start font-grotesk">
-                  State of Health: {determineHealthLabel(holistic.generalWellness)}
+            <div className="flex flex-col items-center w-full min-w-[250px]">
+              <div className="flex flex-col justify-start w-full">
+                <div className="text-2xl text-center font-sourceSans">Health Report</div>
+                <div className="mt-4 text-xl text-center font-sourceSans text-[#727272]">
+                  State of Health:{" "}
+                  <span className="text-[#339A31]">
+                    <b>{determineHealthLabel(holistic.generalWellness)}</b>
+                  </span>
                 </div>
-                <div className="mt-10 text-start mb-8 font-grotesk text-[#339A31]">
-                  <div className="mb-1 nice-scroller">
-                    <HealthResult name="Date" value={currentDate.toLocaleString()} />
-                    <hr className="mb-2 text-[#F4F4F4]" />
+                <div className="mt-2 text-sm text-center font-sourceSans text-[#727272]">Date: {currentDate.toLocaleString()}</div>
+
+                <div className="mt-10 text-start font-sourceSans text-[#339A31]">
+                  <div className="p-4 mb-4 rounded-lg nice-scroller bg-[#F0F0F0]">
                     {Object.entries(userInfo.expressions).map(([expression, value]) => {
                       const percentage = ((value.count / totalExpressionsCount) * 100).toFixed(2);
                       return (
                         <HealthResult
                           key={expression}
                           name={
-                            <div className="flex">
+                            <div className="flex items-end">
                               {expression}
-                              <span className="ml-1 tablet:hidden mobile:block text-[12px] font-normal mt-[2px] text-[#C2C2C2]">{`Accuracy (${(
+                              <span className="ml-1 block text-[12px] font-normal mb-[2px]">{`Accuracy (${(
                                 Number(value.percentLevelOfDetection) * 100
                               ).toFixed(0)}%)`}</span>
                             </div>
                           }
                           value={
                             <>
-                              <div className="mobile:block tablet:hidden font-bold text-[#4B465C]">{` ${percentage}%`}</div>
-                              <div className="mobile:hidden text-xs font-normal text-[#4B465C] tablet:flex flex-col items-end justify-end">
-                                <span className="text-base font-bold text-[#4B465C]">{` ${percentage}%`}</span>
-                                {`Accuracy (${(Number(value.percentLevelOfDetection) * 100).toFixed(0)}%)`}
-                              </div>
+                              <div className="block font-bold">{` ${percentage}%`}</div>
                             </>
                           }
                         />
@@ -173,14 +180,14 @@ const HealthResultCon = ({
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col items-center justify-center w-full tablet:w-1/2 tablet:justify-end tablet:items-end">
+              <div className="flex flex-col items-center justify-center w-full">
                 <ProgressRing value={Math.floor(holistic.generalWellness)} label={determineHealthLabel(holistic.generalWellness)} />
               </div>
             </div>
 
-            <div className="flex tablet:flex-row gap-5 flex-col items-center tablet:justify-between w-full min-w-[250px] inBetweenN:min-w-[300px]">
-              <div className="w-full tablet:w-2/3">
-                <div className="flex flex-row items-center justify-start px-8 font-grotesk text-[16px] h-[50px] bg-[#9FD39D] w-full">
+            <div className="flex gap-5 flex-col items-center w-full min-w-[250px]">
+              {/* <div className="w-full tablet:w-2/3">
+                <div className="flex flex-row items-center justify-start px-8 font-sourceSans text-[16px] h-[50px] bg-[#9FD39D] w-full">
                   Cardiovascular
                 </div>
                 <div className="flex flex-row flex-wrap items-center justify-between w-full mt-3 mb-3 mobile:gap-2 tablet:gap-6">
@@ -205,91 +212,130 @@ const HealthResultCon = ({
                     value={`${(cardio?.stroke * 100).toFixed(1)}%`}
                   />
                 </div>
-              </div>
-              <div className="w-full tablet:w-1/3">
-                <div className="flex flex-row items-center justify-start px-8 font-grotesk text-[16px] h-[50px] bg-[#9FD39D] w-full">
-                  Heart
-                </div>
-                <div className="flex flex-row flex-wrap items-center justify-center w-full mt-[18px] mb-3 tablet:justify-between mobile:gap-2 tablet:gap-6">
-                  <HealthResultItemBlock
-                    name="Heart Rate"
-                    degree={calculateRiskDegree("heartRate", vs.heartRate)}
-                    value={checkVitalSignValues(`${vs.heartRate.toFixed(2)} bpm`)}
-                  />
-                  <HealthResultItemBlock
-                    name="RMSSD"
-                    degree={calculateRiskDegree("rmssd", vs.hrvRmssd)}
-                    value={checkVitalSignValues(`${vs.hrvRmssd.toFixed(2)} bpm`)}
-                  />
-                  <HealthResultItemBlock
-                    name="SDNN"
-                    degree={calculateRiskDegree("sdnn", vs.hrvSdnn)}
-                    value={checkVitalSignValues(`${vs.hrvSdnn} ms`)}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="flex tablet:flex-row gap-5 flex-col items-center tablet:justify-between w-full min-w-[250px] inBetweenN:min-w-[300px]">
-              <div className="w-full">
-                <div className="flex flex-row items-center justify-start px-8 font-grotesk text-[16px] h-[50px] bg-[#9FD39D] w-full">
-                  Blood
-                </div>
-                <div className="flex flex-row flex-wrap items-center justify-center w-full mt-3 mb-3 tablet:justify-between mobile:gap-2 tablet:gap-6">
-                  <HealthResultItemBlock
-                    name="Systolic Pressure"
-                    degree={calculateRiskDegree("systolic", vs.bloodPressureSystolic)}
-                    value={checkVitalSignValues(`${vs.bloodPressureSystolic} mmHg`)}
-                  />
-                  <HealthResultItemBlock
-                    name="Diastolic Pressure"
-                    degree={calculateRiskDegree("diastolic", vs.bloodPressureDiastolic)}
-                    value={checkVitalSignValues(`${vs.bloodPressureDiastolic} mmHg`)}
-                  />
-                  <HealthResultItemBlock
-                    name="Oxygen in Blood"
-                    degree={calculateRiskDegree("spo2", vs.spo2)}
-                    value={checkVitalSignValues(`${vs.spo2.toFixed(2)} %`)}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-row gap-5 items-center tablet:justify-between w-full min-w-[250px] inBetweenN:min-w-[300px]">
-              <div className="w-full">
-                <div className="flex flex-row items-center justify-start px-8 font-grotesk text-[16px] h-[50px] bg-[#9FD39D] w-full">
-                  Other
-                </div>
-                <div className="flex flex-col flex-wrap items-center justify-between w-full gap-2 mt-3 mb-3 tablet:flex-row tablet:gap-6">
-                  <div className="flex flex-row justify-center w-full tablet:w-[47%]">
-                    <HealthResultItemBlock
-                      name="Respiratory Rate"
-                      value={checkVitalSignValues(`${vs.respiratoryRate} bpm`)}
-                      degree={calculateRiskDegree("respiratoryRate", vs.respiratoryRate)}
-                    />
-                  </div>
-                  <div className="flex flex-row justify-center w-full tablet:w-[47%]">
-                    <HealthResultItemBlock
-                      name="Stress"
-                      value={checkVitalSignValues(`${vs.stress} und`)}
-                      degree={calculateRiskDegree("stress", vs.stress)}
-                    />
+              </div> */}
+              <div className="w-full border-[#D0D0D0] border-[1px] rounded-lg">
+                <div
+                  className="flex flex-row items-center justify-between px-4 font-sourceSans text-[16px] h-[40px] bg-[#9FD39D] w-full rounded-t-lg cursor-pointer"
+                  onClick={() => toggleVisibility("heart")}
+                >
+                  <div>Heart</div>
+                  <div className={`mr-2 transform ${isHeartVisible ? "rotate-90" : "rotate-180"}`}>
+                    <img src={arrowDownIcon} alt="arrow-down" />
                   </div>
                 </div>
+                {isHeartVisible && (
+                  <div className="flex flex-row flex-wrap items-center justify-center w-full mt-[18px] mb-3 tablet:justify-between mobile:gap-2 tablet:gap-6">
+                    <HealthResultItemBlock
+                      name="Heart Rate"
+                      degree={calculateRiskDegree("heartRate", vs.heartRate)}
+                      value={checkVitalSignValues(`${vs.heartRate.toFixed(2)} bpm`)}
+                    />
+                    <div className="w-full px-4">
+                      <div className="w-full h-[1px] bg-[#818181]"></div>
+                    </div>
+                    <HealthResultItemBlock
+                      name="RMSSD"
+                      degree={calculateRiskDegree("rmssd", vs.hrvRmssd)}
+                      value={checkVitalSignValues(`${vs.hrvRmssd.toFixed(2)} bpm`)}
+                    />
+                    <div className="w-full px-4">
+                      <div className="w-full h-[1px] bg-[#818181]"></div>
+                    </div>
+                    <HealthResultItemBlock
+                      name="SDNN"
+                      degree={calculateRiskDegree("sdnn", vs.hrvSdnn)}
+                      value={checkVitalSignValues(`${vs.hrvSdnn} ms`)}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex  mt-10 gap-5 flex-col items-center w-full min-w-[250px]">
+              <div className="w-full border-[#D0D0D0] border-[1px] rounded-lg">
+                <div
+                  className="flex flex-row items-center justify-between px-4 font-sourceSans text-[16px] h-[40px] bg-[#9FD39D] w-full rounded-t-lg"
+                  onClick={() => toggleVisibility("blood")}
+                >
+                  <div>Blood</div>
+                  <div className={`mr-2 transform ${isBloodVisible ? "rotate-90" : "rotate-180"}`}>
+                    <img src={arrowDownIcon} alt="arrow-down" />
+                  </div>
+                </div>
+                {isBloodVisible && (
+                  <div className="flex flex-row flex-wrap items-center justify-center w-full mt-3 mb-3 tablet:justify-between mobile:gap-2 tablet:gap-6">
+                    <HealthResultItemBlock
+                      name="Systolic Pressure"
+                      degree={calculateRiskDegree("systolic", vs.bloodPressureSystolic)}
+                      value={checkVitalSignValues(`${vs.bloodPressureSystolic} mmHg`)}
+                    />
+                    <div className="w-full px-4">
+                      <div className="w-full h-[1px] bg-[#818181]"></div>
+                    </div>
+                    <HealthResultItemBlock
+                      name="Diastolic Pressure"
+                      degree={calculateRiskDegree("diastolic", vs.bloodPressureDiastolic)}
+                      value={checkVitalSignValues(`${vs.bloodPressureDiastolic} mmHg`)}
+                    />
+                    <div className="w-full px-4">
+                      <div className="w-full h-[1px] bg-[#818181]"></div>
+                    </div>
+                    <HealthResultItemBlock
+                      name="Oxygen in Blood"
+                      degree={calculateRiskDegree("spo2", vs.spo2)}
+                      value={checkVitalSignValues(`${vs.spo2.toFixed(2)} %`)}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex flex-row items-center w-full gap-5 mt-10">
+              <div className="w-full border-[#D0D0D0] border-[1px] rounded-lg">
+                <div
+                  className="flex flex-row items-center justify-between px-4 font-sourceSans text-[16px] h-[40px] bg-[#9FD39D] w-full rounded-t-lg"
+                  onClick={() => toggleVisibility("other")}
+                >
+                  <div>Other</div>
+                  <div className={`mr-2 transform ${isOtherVisible ? "rotate-90" : "rotate-180"}`}>
+                    <img src={arrowDownIcon} alt="arrow-down" />
+                  </div>
+                </div>
+                {isOtherVisible && (
+                  <div className="flex flex-col flex-wrap items-center justify-between w-full gap-2 mt-3 mb-3 tablet:flex-row tablet:gap-6">
+                    <div className="flex flex-row justify-center w-full">
+                      <HealthResultItemBlock
+                        name="Respiratory Rate"
+                        value={checkVitalSignValues(`${vs.respiratoryRate} bpm`)}
+                        degree={calculateRiskDegree("respiratoryRate", vs.respiratoryRate)}
+                      />
+                    </div>
+                    <div className="w-full px-4">
+                      <div className="w-full h-[1px] bg-[#818181]"></div>
+                    </div>
+                    <div className="flex flex-row justify-center w-full">
+                      <HealthResultItemBlock
+                        name="Stress"
+                        value={checkVitalSignValues(`${vs.stress} und`)}
+                        degree={calculateRiskDegree("stress", vs.stress)}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             {isVoiceScanAdded && (
               <>
                 <div className="flex flex-col justify-start w-full pt-16 pb-5 tablet:w-1/2">
-                  <div className="text-start font-grotesk">VOICE ANALYSIS REPORT</div>
+                  <div className="text-start font-sourceSans">VOICE ANALYSIS REPORT</div>
                 </div>
                 <div className="flex flex-row flex-wrap items-center justify-center w-full px-4 mb-5 mobile:gap-2 tablet:gap-6">
                   <div className={`mt-4 ${assessedVoiceData ? "h-2/3" : ""}`}>
                     {!assessedVoiceData && assessedVoiceData !== -1 ? (
                       <div className="flex flex-col items-center justify-center ">
                         <div className="spinner !w-[90px] !h-[90px]"></div>
-                        <p className="m-5 text-lg font-bold text-darkGreen font-grotesk">Voice Results Loading...</p>
+                        <p className="m-5 text-lg font-bold text-darkGreen font-sourceSans">Voice Results Loading...</p>
                       </div>
                     ) : assessedVoiceData === -1 ? (
-                      <div className="flex items-center justify-center h-full text-xl font-bold text-center font-grotesk text-[#993331]">
+                      <div className="flex items-center justify-center h-full text-xl font-bold text-center font-sourceSans text-[#993331]">
                         {voiceDataErrorMessage || "There was a problem with the voice scan results"}
                       </div>
                     ) : (
@@ -300,60 +346,65 @@ const HealthResultCon = ({
               </>
             )}
           </>
-        </div>
-      </div>
-      <div className="flex flex-col flex-wrap items-start justify-center w-full gap-5 mt-16 tablet:flex-row">
-        <div className="flex items-start w-full pl-2 text-sm font-grotesk">
-          To receive a copy of the report, please enter your email address and click 'Send'.
-        </div>
-        <div className="w-full tablet:w-[48%]">
-          <>
-            <TextField
-              placeholder="Type your email"
-              type="email"
-              fullWidth
-              className="w-full"
-              error={Boolean(emailError)}
-              // inputProps={{ minLength: 6 }}
-              value={userEmail || ""}
-              onChange={(e) => setUserEmail(e.target.value)}
-              sx={{
-                ".MuiOutlinedInput-root": {
-                  height: "50px",
-                  fontSize: "12px",
-                  fontFamily: "Space Grotesk",
-                  borderRadius: "5px"
-                },
-                "& .MuiFormLabel-root": {
-                  color: "#9FD39D"
-                }
-              }}
-            />
-            <FormHelperText className="w-full pl-3 error-color">{emailError}</FormHelperText>
-          </>
-        </div>
-        <div className="w-full tablet:w-[48%]">
-          <CustomButton text="Send" fullWidth onClick={sendScreenshotOnEmail} />
-        </div>
-      </div>
-      <div
-        className={`${iframeConfig ? "hidden" : "flex"} flex-col flex-wrap items-center justify-center w-full gap-5 mt-20 tablet:flex-row`}
-      >
-        <div className="w-full inBetween:w-1/2 inBetweenN:w-2/3">
-          <CustomButton text="Register and Start for Free" fullWidth onClick={handleButtonClick} />
-        </div>
-        <div className="w-full inBetween:w-1/2 inBetweenN:w-2/3">
-          <CustomButton text="Try again" fullWidth onClick={tryAgain} />
-        </div>
-      </div>
-      <div className="flex flex-row items-center justify-center w-full mt-20">
-        <div className="flex flex-col font-grotesk justify-center overflow-hidden overflow-y-auto text-sm text-start max-h-80 text-[#938F8F]">
-          *General well-being encompasses an individual's overall state of health, considering various aspects of physical, mental, and
-          emotional well-being. The scoring ranges used are as follows: Less than 40: Poor. Between 40 and 79: Good. Between 80 and 100:
-          Excellent. Typically, scores fall within the range of 80 to 100. A higher score indicates better overall health, while a lower
-          score suggests room for improvement in vital signs. Engaging in healthy habits such as regular exercise, maintaining a balanced
-          diet, and managing stress can contribute to enhancing overall well-being. To obtain a more precise result, it is necessary to
-          gather specific data before evaluating the video. For illustrative purposes, more generalized values have been used.
+          <div className="flex flex-col flex-wrap items-center justify-center w-full gap-5 mt-8">
+            <div className="w-full">
+              <CustomButton text="Retake Face Scan" fullWidth onClick={refreshPage} />
+            </div>
+          </div>
+          <div className="flex flex-col flex-wrap items-start justify-center w-full gap-5 mt-8">
+            <div className="flex items-start w-full text-sm font-sourceSans">
+              To receive a copy of the report, please enter your email address and click 'Send'.
+            </div>
+            <div className="w-full">
+              <>
+                <div className="font-sourceSans">Email Address</div>
+                <TextField
+                  placeholder="Enter your email"
+                  type="email"
+                  fullWidth
+                  className="w-full font-sourceSans"
+                  error={Boolean(emailError)}
+                  value={userEmail || ""}
+                  onChange={(e) => setUserEmail(e.target.value)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <img src={emailIcon} alt="Email Icon" style={{ width: "16px" }} />
+                      </InputAdornment>
+                    )
+                  }}
+                  sx={{
+                    fontFamily: "Source Sans",
+                    ".MuiOutlinedInput-root": {
+                      height: "50px",
+                      fontSize: "14px",
+                      fontFamily: "Source Sans",
+                      borderRadius: "5px"
+                    },
+                    "& .MuiFormLabel-root": {
+                      color: "#9FD39D",
+                      fontFamily: "Source Sans"
+                    }
+                  }}
+                />
+                <FormHelperText className="w-full pl-3 error-color">{emailError}</FormHelperText>
+              </>
+            </div>
+            <div className="w-full">
+              <CustomButton text="Send" fullWidth onClick={sendScreenshotOnEmail} />
+            </div>
+          </div>
+          <div className="flex flex-row items-center justify-center w-full mt-10">
+            <div className="flex flex-col font-sourceSans justify-center overflow-y-auto text-sm text-start max-h-100 text-[#938F8F]">
+              *General well-being encompasses an individual's overall state of health, considering various aspects of physical, mental, and
+              emotional well-being. The scoring ranges used are as follows: Less than 40: Poor. Between 40 and 79: Good. Between 80 and 100:
+              Excellent. Typically, scores fall within the range of 80 to 100. A higher score indicates better overall health, while a lower
+              score suggests room for improvement in vital signs. Engaging in healthy habits such as regular exercise, maintaining a
+              balanced diet, and managing stress can contribute to enhancing overall well-being. To obtain a more precise result, it is
+              necessary to gather specific data before evaluating the video. For illustrative purposes, more generalized values have been
+              used.
+            </div>
+          </div>
         </div>
       </div>
     </>

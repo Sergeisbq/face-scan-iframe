@@ -1,50 +1,55 @@
 import { useEffect, useState } from "react";
-import assessmentService from "../../services/assessmentService";
-import { msgParentWindow } from "../../utils";
+// import assessmentService from "../../services/assessmentService";
+// import { msgParentWindow } from "../../utils";
 import FaceScan from "./FaceScan";
 import Swal from "sweetalert2";
 
 const FaceScanIFrameAdapter = ({
   isMobile,
   videoToken,
-  noDesign,
-  buttonBgColor,
-  buttonTextColor,
+  // noDesign,
+  // buttonBgColor,
+  // buttonTextColor,
   showResults,
-  age,
-  gender,
+  // age,
+  // gender,
   isVoiceAnalysisOn
 }) => {
   const [failedToLoadMsg, setFailedToLoadMsg] = useState();
   const [onFinishMsg, setOnFinishMsg] = useState();
-  const [iframeConfig, setIframeConfig] = useState();
+  const [iframeConfig, setIframeConfig] = useState({
+    videoToken,
+    showResults,
+    isVoiceAnalysisOn,
+    clientId: "testClientId"
+  });
 
-  const checkVideoToken = async () => {
-    if (!videoToken) {
-      return setFailedToLoadMsg("Missing token or client ID");
-    }
+  // const checkVideoToken = async () => {
+  //   if (!videoToken) {
+  //     return setFailedToLoadMsg("Missing token or client ID");
+  //   }
 
-    const getVideoTokenData = await assessmentService.validateVideoTokenOnIframeLoadEndpoint(videoToken);
-    if (getVideoTokenData.success) {
-      setIframeConfig({
-        videoToken,
-        noDesign,
-        buttonBgColor,
-        buttonTextColor,
-        showResults,
-        isVoiceAnalysisOn,
-        clientId: getVideoTokenData.clientId,
-        age,
-        gender
-      });
-    } else if (getVideoTokenData.isTokenExpired) {
-      setFailedToLoadMsg(getVideoTokenData.message);
-      msgParentWindow("failedToLoadPage", { success: false, message: "Token Expired" });
-    } else if (getVideoTokenData.isTokenUsedAlready) {
-      setFailedToLoadMsg(getVideoTokenData.message);
-      msgParentWindow("failedToLoadPage", { success: false, message: "Token is already used" });
-    }
-  };
+  //   const getVideoTokenData = await assessmentService.getFaceScan(videoToken);
+  //   if (getVideoTokenData.success) {
+  //     setIframeConfig({
+  //       videoToken,
+  //       // noDesign,
+  //       // buttonBgColor,
+  //       // buttonTextColor,
+  //       showResults,
+  //       isVoiceAnalysisOn,
+  //       clientId: "testClientId"
+  //       // age,
+  //       // gender
+  //     });
+  //   } else if (getVideoTokenData.isTokenExpired) {
+  //     setFailedToLoadMsg(getVideoTokenData.message);
+  //     msgParentWindow("failedToLoadPage", { success: false, message: "Token Expired" });
+  //   } else if (getVideoTokenData.isTokenUsedAlready) {
+  //     setFailedToLoadMsg(getVideoTokenData.message);
+  //     msgParentWindow("failedToLoadPage", { success: false, message: "Token is already used" });
+  //   }
+  // };
 
   const onIFrameFinish = () => {
     Swal.fire(
@@ -57,15 +62,15 @@ const FaceScanIFrameAdapter = ({
     setIframeConfig(null);
   };
 
-  useEffect(() => {
-    checkVideoToken();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   checkVideoToken();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   return (
     <>
       {iframeConfig && (
-        <div className="flex items-center justify-center p-5">
+        <div className="flex items-center justify-center">
           <FaceScan
             iframeConfig={iframeConfig}
             onIFrameFinish={onIFrameFinish}

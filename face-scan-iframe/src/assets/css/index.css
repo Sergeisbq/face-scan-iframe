@@ -3,38 +3,31 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Space Grotesk';
-  src: url(../fonts/SpaceGrotesk-Light.ttf);
-  font-weight: 300;
-}
-
-@font-face {
-  font-family: 'Space Grotesk';
-  src: url(../fonts/SpaceGrotesk-Regular.ttf);
+  font-family: "Source Sans";
+  src: url(../fonts/SourceSans3-Regular.ttf);
   font-weight: 400;
 }
 
 @font-face {
-  font-family: 'Space Grotesk';
-  src: url(../fonts/SpaceGrotesk-Bold.ttf);
-  font-weight: 500;
+  font-family: "Source Sans";
+  src: url(../fonts/SourceSans3-Bold.ttf);
+  font-weight: 700;
 }
-
 
 body {
   overflow: overlay;
 }
 
 .primary-color {
-  color: #9FD39D;
+  color: #9fd39d;
 }
 
 .bg-primary {
-  background: #9FD39D;
+  background: #9fd39d;
 }
 
 .bg-primary-important {
-  background: #9FD39D  !important;
+  background: #9fd39d !important;
 }
 
 .border-light-gray {
@@ -62,12 +55,12 @@ body {
   background-clip: padding-box;
   -webkit-border-radius: 9999px;
   border-radius: 9999px;
-  background-color: #9FD39D;
+  background-color: #9fd39d;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   border: 2.5px solid rgba(0, 0, 0, 0);
-  background-color: #9FD39D;
+  background-color: #9fd39d;
   -webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.5);
   box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.5);
 }
