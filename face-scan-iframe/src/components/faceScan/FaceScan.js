@@ -304,11 +304,15 @@ const FaceScan = ({ iframeConfig, onIFrameFinish, isVoiceScanAdded, setIsVoiceSc
         // if (iframeConfig) faceScanEndpoint = endpoints.getVideoAnalysisEndpoint;
       }
 
+      const originalUserAgent = navigator.userAgent;
+      const modifiedUserAgent = originalUserAgent + " YourHealth/1.0";
+
       const res = await fetch(faceScanEndpoint, {
         method: "POST",
         headers: {
           Authorization: localStorage.getItem("token"),
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "X-Custom-User-Agent": modifiedUserAgent
         },
         body: JSON.stringify({
           url: args[0],
