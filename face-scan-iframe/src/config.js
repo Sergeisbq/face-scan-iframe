@@ -1,8 +1,8 @@
 export const isLocal = process.env.NODE_ENV === "development";
 export const panopticsUserId = "6e68d676-8432-40d0-9b63-8a3c933464c6";
 export const recaptchaSiteKey = "6LfRWXAlAAAAAJbsBIa3bP_aHzWwxV8O7VG5jTzS";
-let apiUrlEndpoint = isLocal ? "http://localhost:9733/" : "https://api.bizbaz.tech/";
-if (!isLocal && !window.location.host.includes("panel.insightgenie.ai")) apiUrlEndpoint = "https://dev.bizbaz.tech/";
+let apiUrlEndpoint = isLocal ? "http://localhost:9733/" : "https://api.insightgenie.ai/";
+if (!isLocal && !window.location.host.includes("panel.insightgenie.ai")) apiUrlEndpoint = "https://dev.insightgenie.ai/";
 
 export const endpoints = {
   faceScanEndpoint: apiUrlEndpoint + "face-scan",
